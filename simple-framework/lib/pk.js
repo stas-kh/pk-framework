@@ -22,11 +22,11 @@
                         },
                         set(newValue) {
                             value = newValue;
-                            bindValues(prop, newValue);
+                            reflectValuesOnView(prop, newValue);
                         }
                     });
 
-                    bindValues(prop, value);
+                    reflectValuesOnView(prop, value);
                     bindControlsToModel(prop);
                 }
             }
@@ -40,13 +40,13 @@
             });
         };
 
-        const bindValues = (prop, value) => {
+        const reflectValuesOnView = (prop, value) => {
             iterate(`[pk-model='${prop}']`, (node) => {
-                if (isInputElement(node)) {
-                    node.value = value;
-                } else if (!node.type) {
-                    node.innerHTML = value;
-                }
+                node.value = value;
+            });
+
+            iterate(`[pk-bind='${prop}']`, (node) => {
+                node.innerHTML = value;
             });
         };
 
@@ -78,10 +78,12 @@
             iterate(`[pk-onclick]`, (node) => {
                 node.onclick = () => {
                     const attrVal = node.getAttribute('pk-onclick');
-                    const args = attrVal.match(/\(\s*([^)]+?)\s*\)/)[1];
                     const functionName = attrVal.match(/^[^(]*/g)[0];
 
-                    PKIntance[functionName].apply(PKIntance, args.split(','));
+                    const parsedArgs = attrVal.match(/\(\s*([^)]+?)\s*\)/);
+                    const args = parsedArgs ? parsedArgs[1].split(',') : undefined;
+
+                    PKIntance[functionName].apply(PKIntance, args);
                     update();
                 };
             });
@@ -166,7 +168,7 @@
         const update = () => {
             handleStatements();
             handleLoops();
-            bindValues();
+            reflectValuesOnView();
         };
 
         init();

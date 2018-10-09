@@ -7,6 +7,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css">
 	<style>
+		@import url('https://fonts.googleapis.com/css?family=Inconsolata|Montserrat');
+
+		*, input {
+			font-family: 'Montserrat', sans-serif;
+		}
 
 		h1 {
 			margin-top: 2rem;
@@ -23,13 +28,11 @@
 <div class="container" pk-ctrl="MyCtrl">
 	<div class="row text-center">
 		<div class="col">
-			<code>
-				<h1>
-					<span class="text-danger">•</span>
-					PKey Framework
-					<span class="text-danger">•</span>
-				</h1>
-			</code>
+			<h1>
+				<span class="text-danger">•</span>
+				PKey Framework
+				<span class="text-danger">•</span>
+			</h1>
 		</div>
 	</div>
 
@@ -45,7 +48,7 @@
 				<div class="form-group">
 					<input class="form-control" type="text" pk-model="title">
 
-					<p class="ml-1 mt-2" pk-model="title"></p>
+					<p class="ml-1 mt-2" pk-bind="title"></p>
 				</div>
 			</div>
 		</div>
@@ -54,7 +57,7 @@
 			<pre>
 				<code class="language-html">
 &lt;input class="form-control" type="text" pk-model="title"&gt;
-&lt;p pk-model="title"&gt;&lt;/p&gt;</code>
+&lt;p pk-bind="title"&gt;&lt;/p&gt;</code>
 			</pre>
 		</div>
 	</div>
@@ -71,7 +74,7 @@
 				<li class="list-group-item">
 					Step 1: <span pk-if="true">Mix flour and salt in large bowl</span>
 				</li>
-				<li class="list-group-item" pk-onclick="toggleItem">
+				<li class="list-group-item" pk-onclick="toggleItem()">
 					Step 2 (click to see): <span pk-if="isShown">Fill with apple mixture; set aside</span>
 				</li>
 			</ul>
@@ -96,32 +99,30 @@ Step 2: &lt;span pk-if="isShown"&gt;Fill with apple mixture; set aside&lt;/span&
 		<div class="col">
 			<div class="row">
 				<div class="col-6">
-					<button type="button" class="btn btn-primary mb-4" pk-onclick="buttonClick">Click me</button>
+					<button type="button" class="btn btn-primary mb-2 mt-2" pk-onclick="buttonClick()">Click me</button>
 
 					<div class="collapse mt-2" pk-if="btnMessage">
-						<div class="card card-body" pk-model="btnMessage"></div>
+						<div class="card card-body" pk-bind="btnMessage"></div>
 					</div>
 				</div>
 
 				<div class="col-6">
 					<pre>
 						<code class="language-html">
-&lt;button class="btn btn-primary" pk-onclick="buttonClick"&gt;
+&lt;button class="btn btn-primary" pk-onclick="buttonClick()"&gt;
 	Click me
 &lt;/button&gt;</code>
 					</pre>
 				</div>
 
 				<div class="col-6">
-					<p>
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" pk-oncheck="checkboxClick" class="custom-control-input" id="customCheck1">
-							<label class="custom-control-label" for="customCheck1">Check me</label>
-						</div>
-					</p>
+					<div class="custom-control custom-checkbox mb-2 mt-2">
+						<input type="checkbox" pk-oncheck="checkboxClick()" class="custom-control-input" id="customCheck1">
+						<label class="custom-control-label" for="customCheck1">Check me</label>
+					</div>
 
 					<div class="collapse" pk-if="checkboxMessage">
-						<div class="card card-body" pk-model="checkboxMessage"></div>
+						<div class="card card-body" pk-bind="checkboxMessage"></div>
 					</div>
 				</div>
 
@@ -129,7 +130,7 @@ Step 2: &lt;span pk-if="isShown"&gt;Fill with apple mixture; set aside&lt;/span&
 					<pre>
 						<code class="language-html">
 &lt;div class="form-group"&gt;
-	&lt;input type="checkbox" pk-oncheck="checkboxClick"&gt;
+	&lt;input type="checkbox" pk-oncheck="checkboxClick()"&gt;
 &lt;/div&gt;</code>
 					</pre>
 				</div>
