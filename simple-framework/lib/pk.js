@@ -8,7 +8,8 @@
 
         const root = document.querySelector(`[pk-ctrl='${obj.ctrl}']`);
         const PKIntance = {
-            ...obj.methods
+            ...obj.methods,
+            ...obj.hooks
         };
 
         const decorateProperties = () => {
@@ -26,7 +27,7 @@
                         }
                     });
 
-                    reflectValuesOnView(prop, value);
+                    reflectValuesOnView(prop, value, false);
                     bindControlsToModel(prop);
                 }
             }
@@ -36,11 +37,13 @@
             iterate(`[pk-model='${prop}']`, (node) => {
                 if (isInputElement(node)) {
                     node.addEventListener('input', ($event) => PKIntance[prop] = $event.target.value);
+                } else {
+                    throw new Error(`The 'pk-model' attribute can be used only on inputs and textareas`);
                 }
             });
         };
 
-        const reflectValuesOnView = (prop, value) => {
+        const reflectValuesOnView = (prop, value, forceUpdate = true) => {
             iterate(`[pk-model='${prop}']`, (node) => {
                 node.value = value;
             });
@@ -48,9 +51,13 @@
             iterate(`[pk-bind='${prop}']`, (node) => {
                 node.innerHTML = value;
             });
+
+            if (forceUpdate) {
+                update();
+            }
         };
 
-        const isInputElement = ({ type }) => {
+        const isInputElement = ({type}) => {
             return type && type === 'text' || type === 'textarea';
         };
 
@@ -103,33 +110,33 @@
 
         const handleLoops = () => {
             iterate(`[pk-for]`, (node) => {
-                const { loopThrough, item } = getLoopDetails(node.getAttribute('pk-for'));
+                const {loopThrough, item} = getLoopDetails(node.getAttribute('pk-for'));
                 const parent = node.parentNode;
 
                 iterate('[pk-iterator]', (node) => parent.removeChild(node));
 
-                PKIntance[loopThrough].forEach((element) => {
-                    const nodeClone = node.cloneNode(true);
+                if (Array.isArray(PKIntance[loopThrough])) {
+                    PKIntance[loopThrough].forEach((element) => {
+                        const nodeClone = node.cloneNode(true);
 
-                    nodeClone.removeAttribute('pk-for');
-                    nodeClone.removeAttribute('pk-hidden');
-                    nodeClone.setAttribute('pk-iterator', '');
+                        nodeClone.removeAttribute('pk-for');
+                        nodeClone.removeAttribute('pk-hidden');
+                        nodeClone.setAttribute('pk-iterator', '');
 
-                    if (isObject(element)) {
-                        nodeClone.innerHTML = nodeClone.innerHTML.replace(/{{ (.*?) }}/g, (...args) => {
-                            const matcher = args[1].split('.')[1];
-                            return element[matcher];
-                        });
-                    } else {
-                        nodeClone.innerHTML = nodeClone.innerHTML.replace(`{{ ${item} }}`, element);
-                    }
-                    parent.appendChild(nodeClone);
-                });
+                        if (isObject(element)) {
+                            nodeClone.innerHTML = nodeClone.innerHTML.replace(/{{ (.*?) }}/g, (...args) => {
+                                const matcher = args[1].split('.')[1];
+                                return element[matcher];
+                            });
+                        } else {
+                            nodeClone.innerHTML = nodeClone.innerHTML.replace(`{{ ${item} }}`, element);
+                        }
+                        parent.appendChild(nodeClone);
+                    });
+                }
 
                 node.setAttribute('pk-hidden', '');
             });
-
-            handleActions();
         };
 
         const isObject = (item) => {
@@ -138,37 +145,32 @@
 
         const getLoopDetails = (loopAttr) => {
             const [item, loopThrough] = loopAttr.split(' in ');
-            return { item, loopThrough };
+            return {item, loopThrough};
         };
 
         const iterate = (selector, fn) => {
             root.querySelectorAll(selector).forEach(e => fn.call(this, e));
         };
 
-        const appendStyles = () => {
-            const style = document.createElement('style');
-
-            style.type = 'text/css';
-            style.appendChild(document.createTextNode`
-                [pk-hidden] { 
-                    display: none !important; 
-                }
-            `);
-
-            document.head.appendChild(style);
+        const callHook = (hook) => {
+            if (PKIntance.hasOwnProperty(hook) && typeof PKIntance[hook] === 'function') {
+                PKIntance[hook].call(PKIntance);
+            }
         };
 
         const init = () => {
-            appendStyles();
             decorateProperties();
-            handleActions();
+            callHook('onCreated');
             update();
+            callHook('onMounted');
+            document.body.removeAttribute('pk-hidden');
         };
 
         const update = () => {
-            handleStatements();
             handleLoops();
-            reflectValuesOnView();
+            handleActions();
+            handleStatements();
+            callHook('onUpdate');
         };
 
         init();
@@ -181,5 +183,20 @@
     } else {
         window.PK = PK;
     }
+
+    const appendStyles = () => {
+        const style = document.createElement('style');
+
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode`
+        [pk-hidden], [pk-for] { 
+            display: none !important; 
+        }
+    `);
+
+        document.head.appendChild(style);
+    };
+
+    appendStyles();
 
 }());

@@ -10,7 +10,7 @@ window.addEventListener('load', () => {
             ingredients: ['Apples', 'Sugar', 'Corn starch', 'Cinnamon', 'Nutmeg', 'Lemon juice']
         },
         methods: {
-            toggleItem(status) {
+            toggleItem() {
                 this.isShown = !this.isShown;
             },
             buttonClick() {

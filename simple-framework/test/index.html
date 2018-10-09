@@ -46,6 +46,8 @@
 		<div class="row mt-4">
 			<div class="col">
 				<div class="d-flex">
+					<img width="100" height="100" src="https://loading.io/spinners/fidget-spinner/lg.fidget-spinner.gif" alt="loader" pk-if="isLoading">
+
 					<div class="card w-25 ml-2" pk-for="$item in ingredients">
 						<div class="card-body">
 							<h5 class="card-title">{{ $item.name }}</h5>
