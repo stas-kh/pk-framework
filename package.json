@@ -1,0 +1,19 @@
+{
+  "name": "pkey",
+  "version": "0.0.1",
+  "description": "Easy-to-use not ready for production framework built just for fun",
+  "main": "lib/pk.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "framework",
+    "javascript"
+  ],
+  "author": "Stanislav Khorunzhyi",
+  "license": "ISC"
+}

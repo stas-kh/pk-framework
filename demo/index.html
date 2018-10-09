@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PiKey Framework demo</title>
+	<script src="../lib/pk.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css">
+	<style>
+
+		h1 {
+			margin-top: 2rem;
+			color: #dc3545;
+		}
+		h4 {
+			margin-top: 2rem;
+			margin-bottom: 1rem;
+		}
+	</style>
+</head>
+<body>
+
+<div class="container" pk-ctrl="MyCtrl">
+	<div class="row text-center">
+		<div class="col">
+			<code>
+				<h1>
+					<span class="text-danger">•</span>
+					PKey Framework
+					<span class="text-danger">•</span>
+				</h1>
+			</code>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<h4 class="text-center">2 way data binding</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div>
+				<div class="form-group">
+					<input class="form-control" type="text" pk-model="title">
+
+					<p class="ml-1 mt-2" pk-model="title"></p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<pre>
+				<code class="language-html">
+&lt;input class="form-control" type="text" pk-model="title"&gt;
+&lt;p pk-model="title"&gt;&lt;/p&gt;</code>
+			</pre>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<h4 class="text-center">Statements if/else</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<ul class="list-group">
+				<li class="list-group-item">
+					Step 1: <span pk-if="true">Mix flour and salt in large bowl</span>
+				</li>
+				<li class="list-group-item" pk-onclick="toggleItem">
+					Step 2 (click to see): <span pk-if="isShown">Fill with apple mixture; set aside</span>
+				</li>
+			</ul>
+		</div>
+
+		<div class="col">
+			<pre>
+				<code class="language-html">
+Step 1: &lt;span pk-if="true"&gt;Mix flour and salt in large bowl&lt;/span&gt;
+Step 2: &lt;span pk-if="isShown"&gt;Fill with apple mixture; set aside&lt;/span&gt;</code>
+			</pre>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<h4 class="text-center">Action handlers</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div class="row">
+				<div class="col-6">
+					<button type="button" class="btn btn-primary mb-4" pk-onclick="buttonClick">Click me</button>
+
+					<div class="collapse mt-2" pk-if="btnMessage">
+						<div class="card card-body" pk-model="btnMessage"></div>
+					</div>
+				</div>
+
+				<div class="col-6">
+					<pre>
+						<code class="language-html">
+&lt;button class="btn btn-primary" pk-onclick="buttonClick"&gt;
+	Click me
+&lt;/button&gt;</code>
+					</pre>
+				</div>
+
+				<div class="col-6">
+					<p>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" pk-oncheck="checkboxClick" class="custom-control-input" id="customCheck1">
+							<label class="custom-control-label" for="customCheck1">Check me</label>
+						</div>
+					</p>
+
+					<div class="collapse" pk-if="checkboxMessage">
+						<div class="card card-body" pk-model="checkboxMessage"></div>
+					</div>
+				</div>
+
+				<div class="col-6 mt-2">
+					<pre>
+						<code class="language-html">
+&lt;div class="form-group"&gt;
+	&lt;input type="checkbox" pk-oncheck="checkboxClick"&gt;
+&lt;/div&gt;</code>
+					</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<h4 class="text-center">Loops</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<h6>Ingredients list:</h6>
+			<ul>
+				<li pk-for="$item in ingredients">
+					 {{ $item }}
+				</li>
+			</ul>
+		</div>
+
+		<div class="col">
+			<pre>
+				<code class="language-html">
+&lt;ul&gt;
+	&lt;li pk-for="$item in ingredients"&gt;
+		 {{ $item }}
+	&lt;/li&gt;
+&lt;/ul&gt;</code>
+			</pre>
+		</div>
+	</div>
+</div>
+
+<script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+</body>
+</html>
