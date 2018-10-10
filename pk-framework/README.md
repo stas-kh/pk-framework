@@ -3,7 +3,7 @@ This is my own just-for-fun implementation of a modern JavaScript framework. I a
 
 ## Goal
 The main goals were:
-* The super-small size (200 lines of code)
+* The super-small size (8kb non-minified, 200 lines of code 🚀)
 * Pure JavaScript (no dependencies at all)
 * Performance is not so important (since it's just-for-fun implementation 🤗)
 * Support of the main concepts of a modern JS frameworks
