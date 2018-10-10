@@ -2,166 +2,69 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>PKey Framework demo</title>
+	<title>Receipts [PK]</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<script src="../lib/pk.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css">
-	<style>
-		@import url('https://fonts.googleapis.com/css?family=Inconsolata|Montserrat');
-		*, input { font-family: 'Montserrat', sans-serif;}
-	</style>
 </head>
 <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+	<a class="navbar-brand" href="#">Custom Receipts</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+	        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+</nav>
 
-<div class="container" pk-ctrl="MyCtrl">
-	<div class="row text-center my-4">
-		<div class="col">
-			<h1 class="text-danger">
-				<span>•</span>
-				PKey Framework
-				<span>•</span>
-			</h1>
-		</div>
-	</div>
-
-	<section class="mt-4">
-		<h4 class="text-center">2 way data binding</h4>
-
+<main role="main" class="container mt-4">
+	<div pk-ctrl="ReceiptCtrl" class="container">
 		<div class="row">
 			<div class="col">
-				<div>
+				<form pk-onsubmit="addIngredient()">
 					<div class="form-group">
-						<input class="form-control" type="text" pk-model="title">
-						<p class="ml-1 mt-2" pk-bind="title"></p>
+						<label for="ingredient">Ingredient</label>
+						<input type="text" pk-model="newIngredientName" class="form-control" id="ingredient"
+						       aria-describedby="ingredientForReceipt" placeholder="Add an ingredient">
+					</div>
+					<div class="form-group">
+						<label for="ingredient-description">Description</label>
+						<textarea pk-model="newIngredientDescription" class="form-control" id="ingredient-description"
+						          aria-describedby="ingredientForReceipt" placeholder="Add an ingredient"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Add Ingredient</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col mt-4">
+				<img width="100" height="100" src="https://loading.io/spinners/fidget-spinner/lg.fidget-spinner.gif"
+				     alt="loader" pk-if="isLoading">
+
+				<div class="row">
+					<div class="col-3" pk-for="$ingredient in ingredients">
+						<div class="card mb-2">
+							<div class="card-body">
+								<h5 class="card-title">{{ $ingredient.name }}</h5>
+								<p class="card-text">{{ $ingredient.description }}</p>
+								<button type="button" class="btn btn-danger" pk-onclick="removeIngredient({{ $ingredient.name }})">
+									Remove ingredient
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<div class="col">
-			<pre>
-				<code class="language-html">
-&lt;input class="form-control" type="text" pk-model="title"&gt;
-&lt;p pk-bind="title"&gt;&lt;/p&gt;</code>
-			</pre>
-			</div>
 		</div>
-	</section>
+	</div>
+</main>
 
-	<section class="mt-4">
-		<h4 class="text-center">Statements if/else</h4>
-
-		<div class="row">
-			<div class="col">
-				<ul class="list-group">
-					<li class="list-group-item">
-						Step 1: <span pk-if="true">Mix flour and salt in large bowl</span>
-					</li>
-					<li class="list-group-item" pk-onclick="toggleItem()">
-						Step 2 (click to see): <span pk-if="isShown">Fill with apple mixture; set aside</span>
-					</li>
-				</ul>
-			</div>
-
-			<div class="col">
-			<pre>
-				<code class="language-html">
-Step 1: &lt;span pk-if="true"&gt;Mix flour and salt in large bowl&lt;/span&gt;
-Step 2: &lt;span pk-if="isShown"&gt;Fill with apple mixture; set aside&lt;/span&gt;</code>
-			</pre>
-			</div>
-		</div>
-	</section>
-
-	<section class="mt-4">
-		<h4 class="text-center">Action handlers</h4>
-
-		<div class="row">
-			<div class="col-6">
-				<button type="button" class="btn btn-primary mb-2 mt-2" pk-onclick="buttonClick()">Click me</button>
-
-				<div class="collapse mt-2" pk-if="btnMessage">
-					<div class="card card-body" pk-bind="btnMessage"></div>
-				</div>
-			</div>
-
-			<div class="col-6">
-			<pre>
-				<code class="language-html">
-&lt;button class="btn btn-primary" pk-onclick="buttonClick()"&gt;
-	Click me
-&lt;/button&gt;</code>
-			</pre>
-			</div>
-
-			<div class="col-6">
-				<div class="custom-control custom-checkbox mb-2 mt-2">
-					<input type="checkbox" pk-oncheck="checkboxClick()" class="custom-control-input" id="customCheck1">
-					<label class="custom-control-label" for="customCheck1">Check me</label>
-				</div>
-
-				<div class="collapse" pk-if="checkboxMessage">
-					<div class="card card-body" pk-bind="checkboxMessage"></div>
-				</div>
-			</div>
-
-			<div class="col-6">
-			<pre>
-				<code class="language-html">
-&lt;div class="form-group"&gt;
-	&lt;input type="checkbox" pk-oncheck="checkboxClick()"&gt;
-&lt;/div&gt;</code>
-			</pre>
-			</div>
-
-			<div class="col-6">
-				<form class="form-inline" pk-onsubmit="submitClick('Form is submitted')">
-					<button type="submit" class="btn btn-light mb-2">Submit</button>
-				</form>
-
-				<div class="collapse" pk-if="formSubmitMessage">
-					<div class="card card-body" pk-bind="formSubmitMessage"></div>
-				</div>
-			</div>
-
-			<div class="col-6">
-			<pre>
-				<code class="language-html">
-&lt;form class="form-inline" pk-onsubmit="submitClick('Form is submitted')"&gt;
-	&lt;button type="submit" class="btn btn-light"&gt;Submit&lt;/button&gt;
-&lt;/form&gt;</code>
-			</pre>
-			</div>
-		</div>
-	</section>
-
-	<section class="mt-4">
-		<h4 class="text-center">Loops</h4>
-
-		<div class="row">
-			<div class="col">
-				<h6>Ingredients list:</h6>
-				<ul>
-					<li pk-for="$item in ingredients">
-						{{ $item }}
-					</li>
-				</ul>
-			</div>
-
-			<div class="col">
-			<pre>
-				<code class="language-html">
-&lt;ul&gt;
-	&lt;li pk-for="$item in ingredients"&gt;
-		 {{ $item }}
-	&lt;/li&gt;
-&lt;/ul&gt;</code>
-			</pre>
-			</div>
-		</div>
-	</section>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 <script src="main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
 </body>
 </html>

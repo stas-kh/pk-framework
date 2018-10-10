@@ -17,5 +17,6 @@ The framework supports the following features:
 * Statements (`pk-if`)
 
 ## Demo
-Find the demo with simple docs here: 
-* https://stas-kh.github.io/how-it-works/pk-framework/demo/
+Find the demos: 
+* Documentation: https://stas-kh.github.io/how-it-works/pk-framework/docs
+* Live Demo: https://stas-kh.github.io/how-it-works/pk-framework/demo

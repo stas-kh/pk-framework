@@ -1,27 +1,45 @@
 window.addEventListener('load', () => {
     const pk = PK({
-        ctrl: 'MyCtrl',
+        ctrl: 'ReceiptCtrl',
         data: {
-            title: 'The Perfect Apple Pie',
-            isShown: false,
-            btnMessage: '',
-            checkboxMessage: '',
-            formSubmitMessage: '',
-            btnClicks: 0,
-            ingredients: ['Apples', 'Sugar', 'Corn starch', 'Cinnamon', 'Nutmeg', 'Lemon juice']
+            receiptName: '',
+            newIngredientName: '',
+            newIngredientDescription: '',
+            ingredients: [],
+            isLoading: false
         },
         methods: {
-            toggleItem() {
-                this.isShown = !this.isShown;
+            addIngredient() {
+                this.ingredients.push({
+                    name: this.newIngredientName,
+                    description: this.newIngredientDescription
+                });
+
+                this.newIngredientName = '';
+                this.newIngredientDescription = '';
             },
-            buttonClick() {
-                this.btnMessage = `Button is clicked ${++this.btnClicks} times`;
+            removeIngredient(name) {
+                this.ingredients = this.ingredients.filter(i => i.name.trim() !== name.trim());
+            }
+        },
+        hooks: {
+            onCreated() {
+                this.isLoading = true;
+
+                setTimeout(() => {
+                    fetch(`https://api.myjson.com/bins/poyek`)
+                        .then((data) => data.json())
+                        .then(data => {
+                            this.ingredients = data.ingredients;
+                            this.isLoading = false;
+                        });
+                }, 1000);
             },
-            checkboxClick(e) {
-                this.checkboxMessage = `Checkbox status is ${e}`;
+            onUpdate() {
+                console.log('Did update');
             },
-            submitClick(msg) {
-                this.formSubmitMessage = msg;
+            onMounted() {
+                console.log('Mounted to the DOM');
             }
         }
     });
