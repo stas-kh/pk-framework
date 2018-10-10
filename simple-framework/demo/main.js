@@ -6,6 +6,7 @@ window.addEventListener('load', () => {
             isShown: false,
             btnMessage: '',
             checkboxMessage: '',
+            formSubmitMessage: '',
             btnClicks: 0,
             ingredients: ['Apples', 'Sugar', 'Corn starch', 'Cinnamon', 'Nutmeg', 'Lemon juice']
         },
@@ -18,6 +19,9 @@ window.addEventListener('load', () => {
             },
             checkboxClick(e) {
                 this.checkboxMessage = `Checkbox status is ${e}`;
+            },
+            submitClick(msg) {
+                this.formSubmitMessage = msg;
             }
         }
     });
