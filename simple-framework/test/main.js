@@ -1,5 +1,5 @@
 window.addEventListener('load', () => {
-    PK({
+    const pk = PK({
         ctrl: 'ReceiptCtrl',
         data: {
             receiptName: '',
@@ -19,13 +19,10 @@ window.addEventListener('load', () => {
                 this.newIngredientDescription = '';
             },
             removeIngredient(name) {
-                this.ingredients = this.ingredients.filter(i => i.name !== name);
+                this.ingredients = this.ingredients.filter(i => i.name.trim() !== name.trim());
             }
         },
         hooks: {
-            onUpdate() {
-                console.log('Did update');
-            },
             onCreated() {
                 this.isLoading = true;
 
@@ -37,6 +34,9 @@ window.addEventListener('load', () => {
                             this.isLoading = false;
                         });
                 }, 1000);
+            },
+            onUpdate() {
+                console.log('Did update');
             },
             onMounted() {
                 console.log('Mounted to the DOM');

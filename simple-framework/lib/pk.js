@@ -6,7 +6,7 @@
             throw new Error('Please ensure that controller is passed to the PK framework');
         }
 
-        const root = document.querySelector(`[pk-ctrl='${obj.ctrl}']`);
+        const rootNode = document.querySelector(`[pk-ctrl='${obj.ctrl}']`);
         const PKIntance = {
             ...obj.methods,
             ...obj.hooks
@@ -77,35 +77,44 @@
         const handleActions = () => {
             iterate(`[pk-oncheck]`, (node) => {
                 node.onchange = () => {
-                    PKIntance[getFunctionNameFromAttribute(node, 'pk-oncheck')].call(PKIntance, node.checked);
+                    const name = getFunctionNameFromAttribute(node, 'pk-oncheck');
+                    PKIntance[name].call(PKIntance, node.checked);
                     update();
                 };
             });
 
             iterate(`[pk-onclick]`, (node) => {
                 node.onclick = () => {
-                    const attrVal = node.getAttribute('pk-onclick');
-                    const functionName = attrVal.match(/^[^(]*/g)[0];
-
-                    const parsedArgs = attrVal.match(/\(\s*([^)]+?)\s*\)/);
-                    const args = parsedArgs ? parsedArgs[1].split(',') : undefined;
-
-                    PKIntance[functionName].apply(PKIntance, args);
+                    const { name, args } = parseFunctionString(node, 'pk-onclick');
+                    PKIntance[name].apply(PKIntance, args);
                     update();
                 };
             });
 
             iterate(`[pk-onsubmit]`, (node) => {
                 node.onsubmit = (e) => {
-                    PKIntance[getFunctionNameFromAttribute(node, 'pk-onsubmit')].call(PKIntance);
+                    const { name, args } = parseFunctionString(node, 'pk-onsubmit');
+                    PKIntance[name].apply(PKIntance, args);
                     e.preventDefault();
                     update();
                 };
             });
         };
 
+        const parseFunctionString = (node, attr) => ({
+            name: getFunctionNameFromAttribute(node, attr),
+            args: getArguments(node, attr)
+        });
+
         const getFunctionNameFromAttribute = (node, attr) => {
             return node.getAttribute(attr).match(/^[^(]*/g)[0];
+        };
+
+        const getArguments = (node, attr) => {
+            const attrVal = node.getAttribute(attr);
+            const parsedArgs = attrVal.match(/\(\s*([^)]+?)\s*\)/);
+
+            return parsedArgs ? parsedArgs[1].split(',') : undefined;
         };
 
         const handleLoops = () => {
@@ -145,11 +154,11 @@
 
         const getLoopDetails = (loopAttr) => {
             const [item, loopThrough] = loopAttr.split(' in ');
-            return {item, loopThrough};
+            return { item, loopThrough };
         };
 
         const iterate = (selector, fn) => {
-            root.querySelectorAll(selector).forEach(e => fn.call(this, e));
+            rootNode.querySelectorAll(selector).forEach(e => fn.call(this, e));
         };
 
         const callHook = (hook) => {
@@ -163,7 +172,6 @@
             callHook('onCreated');
             update();
             callHook('onMounted');
-            document.body.removeAttribute('pk-hidden');
         };
 
         const update = () => {
