@@ -18,8 +18,8 @@ window.addEventListener('load', () => {
                 this.newIngredientName = '';
                 this.newIngredientDescription = '';
             },
-            removeIngredient(name) {
-                this.ingredients = this.ingredients.filter(i => i.name.trim() !== name.trim());
+            removeIngredient(name = '') {
+                this.ingredients = this.ingredients.filter(i => i.name.trim() !== name);
             }
         },
         hooks: {
